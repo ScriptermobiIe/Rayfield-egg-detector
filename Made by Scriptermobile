@@ -1,0 +1,71 @@
+-- Rayfield Script (Scriptermobile)
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/Scriptermobile/Rayfield/main/Rayfield.lua'))()
+
+-- Configuration
+local gameName = "Grow A Garden"
+local eggDetectionRange = 10 -- studs
+local petDetectionInterval = 1 -- seconds
+
+-- Get the game's workspace and ReplicatedStorage
+local workspace = game:GetService("Workspace")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Create the Rayfield UI
+local RayfieldMain = Rayfield:Create({
+    Name = gameName .. " Exploit",
+    LoadingText = "Loading...",
+    Theme = "Dark",
+    Save = true,
+    SaveFile = gameName .. "_exploit_config.json"
+})
+
+-- Add "Made by Scriptermobile" text
+RayfieldMain:CreateLabel({
+    Name = "Made by Scriptermobile",
+    Type = "Label",
+    Text = "Made by Scriptermobile",
+    FontSize = 14,
+    FontFamily = "Arial",
+    TextColor = Color3.new(1, 1, 1),
+    BackgroundTransparency = 1,
+    Position = UDim2.new(0.7, 0, 0.9, 0)
+})
+
+-- Create a tab for pet detection
+local PetDetectionTab = RayfieldMain:CreateTab("Pet Detection")
+
+-- Create a section for egg detection
+local EggDetectionSection = PetDetectionTab:CreateSection("Egg Detection")
+
+-- Create a toggle for egg detection
+local EggDetectionToggle = EggDetectionSection:CreateToggle({
+    Name = "Detect Pets in Eggs",
+    CurrentValue = false,
+    Flag = "EggDetection",
+    Callback = function(Value)
+        if Value then
+            -- Start detecting pets in eggs
+            local lastDetectionTime = tick()
+            while true do
+                local currentTime = tick()
+                if currentTime - lastDetectionTime >= petDetectionInterval then
+                    lastDetectionTime = currentTime
+                    -- Detect pets in eggs
+                    for _, egg in pairs(workspace:GetDescendants()) do
+                        if egg.Name == "Egg" then
+                            local pet = egg:FindFirstChild("Pet")
+                            if pet then
+                                -- Interact with the pet
+                                print("Pet detected in egg: " .. pet.Name)
+                                -- Add your interaction code here
+                            end
+                        end
+                    end
+                end
+                wait(0.1)
+            end
+        else
+            -- Stop detecting pets in eggs
+        end
+    end
+})
